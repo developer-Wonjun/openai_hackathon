@@ -22,6 +22,12 @@ class RecommendAnswer(RecommendQuestion):
 class RecommendFeedback(RecommendAnswer):
     answer : str
     self : bool
+    
+class RecommendResult(RecommendQuestion):
+    questions : list
+    answers : list
+    feedbacks : list
+
 # 1. <h1>n번 주제에 대한 질문 받아오는 API </h1>
 # 2. <h1>n번 주제에 대한 답변2개를 받아오는 API </h1>
 # 3. <h1>n번 주제에 답변에 대한 피드백 받아오는 API </h1>

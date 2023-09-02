@@ -50,15 +50,20 @@ def get_answer(data : RecommendAnswer):
     
     #gpt한테 질문에 대한 답변 요구하기 (2개)
     # 받아오는 2개의 유형은 소통해서 정하기
-    
-    answers = [
-        '1번 답변입니다.',
-        '2번 답변입니다.'
-    ]
-    
-    return JSONResponse({
-        'answers' : answers
-    })
+    answers = {
+        'answer1':{
+            'answer' : '1번 답변',
+            'reason' : '1번 근거',
+            'role' : '주장한 타겟'
+        },
+        'answer2':{
+            'answer' : '2번 답변',
+            'reason' : '2번 근거',
+            'role' : '주장한 타겟'
+        } 
+    }
+
+    return answers
 
 #책
 #토론 대상

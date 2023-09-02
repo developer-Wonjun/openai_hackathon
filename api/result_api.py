@@ -11,7 +11,7 @@ router = APIRouter()
              description = """
 <h1>토론 요약 서평 받아오는 API</h1>
              """, status_code = 201)
-def get_result():
+def get_result(data : RecommendResult):
     
     
     return JSONResponse({

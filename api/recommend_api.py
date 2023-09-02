@@ -4,7 +4,7 @@ from datetime import datetime,date
 from fastapi.responses import JSONResponse
 from schemas.gpt_schemas import *
 from config.gpt_config import chat_gpt
-from config.prompt import recommendTarget_prompt
+from config.prompt import recommendTarget_prompt, recommendTopic_prompt
 import json
 
 router = APIRouter()
@@ -54,13 +54,13 @@ def recommend_topic(data : RecommendTopic):
     sys_target = data.sys
     user_target = data.user
     
+    prompt = {"role" : "user",
+            "content" : "소설 {0}에서, {1}와 {2} 두 등장인물이 가상의 토론을 하려고해. 주제를 추천해줘.".format(book_name, sys_target, user_target)}
+    recommendTopic_prompt.append(prompt)
+    data = chat_gpt(recommendTopic_prompt)
     #gpt에게 질문해서 주제2개 받아오기.
-    topics = [
-        '1번 주제입니다.',
-        '2번 주제입니다.'
-    ]
-    
+
     return JSONResponse({
-        'topics' : topics
+        'topics' : data
     })
 
