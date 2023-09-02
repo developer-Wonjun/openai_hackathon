@@ -3,6 +3,9 @@ from fastapi import  Depends,APIRouter
 from datetime import datetime,date
 from fastapi.responses import JSONResponse
 from schemas.gpt_schemas import *
+from config.gpt_config import chat_gpt
+from config.prompt import recommendTarget_prompt
+import json
 
 router = APIRouter()
 
@@ -35,22 +38,11 @@ def recommend_target(data : RecommendTarget):
     book_name = data.book_name
     
     #gpt에게 타겟 두명 물어보기.
-    
-    target1 = {
-        'name' : '헤르만 헤세',
-        'role' : '데미안의 작가'
-    }
-    
-    target2 = {
-        'name' : '프리드리히 니체',
-        'role' : '철학자'
-    }
-    "철학자 '프리드리히 니체'"
-    
-    return JSONResponse({
-        'target1' : target1,
-        'target2' : target2
-    })
+    prompt = {"role" : "user", "content" : "소설 {}를 주제로 독서토론을 하고싶어.".format(book_name)}
+    recommendTarget_prompt.append(prompt)
+    data = chat_gpt(recommendTarget_prompt)
+
+    return data
 
 @router.post('/topic',tags = ["gpt"],
              description = """
