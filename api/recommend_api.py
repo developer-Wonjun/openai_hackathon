@@ -36,8 +36,16 @@ def recommend_target(data : RecommendTarget):
     
     #gpt에게 타겟 두명 물어보기.
     
-    target1 = "헤르만 헤세"
-    target2 = "프리드리히 니체"
+    target1 = {
+        'name' : '헤르만 헤세',
+        'role' : '데미안의 작가'
+    }
+    
+    target2 = {
+        'name' : '프리드리히 니체',
+        'role' : '철학자'
+    }
+    "철학자 '프리드리히 니체'"
     
     return JSONResponse({
         'target1' : target1,

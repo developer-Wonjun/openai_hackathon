@@ -13,7 +13,7 @@ router = APIRouter()
              description = """
 <h1>n번 주제에 대한 질문 받아오는 API (3개 한번에 받아옴.) </h1>
              """, status_code = 201)
-def recommend_question(data : RecommendQuestion):
+def get_question(data : RecommendQuestion):
     
     book_name = data.book_name
     sys_target = data.sys
@@ -40,7 +40,7 @@ def recommend_question(data : RecommendQuestion):
              description = """
 <h1>n번 질문에 대한 답변 받아오는 API (2개 한번에 받아옴.) </h1>
              """, status_code = 201)
-def recommend_answer(data : RecommendAnswer):
+def get_answer(data : RecommendAnswer):
     
     book_name = data.book_name
     sys_target = data.sys
@@ -69,7 +69,7 @@ def recommend_answer(data : RecommendAnswer):
              description = """
 <h1>답변에 대한 피드백 받아오는 API</h1>
              """, status_code = 201)
-def recommend_answer(data : RecommendFeedback):
+def get_feedback(data : RecommendFeedback):
     
     book_name = data.book_name
     sys_target = data.sys
