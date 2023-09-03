@@ -24,9 +24,8 @@ class RecommendFeedback(RecommendAnswer):
     self : bool
     
 class RecommendResult(RecommendQuestion):
-    stage1 : dict
-    stage2 : dict
-    stage3 : dict
+    answers : list
+    feedbacks : list
 
 # 1. <h1>n번 주제에 대한 질문 받아오는 API </h1>
 # 2. <h1>n번 주제에 대한 답변2개를 받아오는 API </h1>

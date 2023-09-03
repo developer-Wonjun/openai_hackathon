@@ -3,6 +3,9 @@ from fastapi import  Depends,APIRouter
 from datetime import datetime,date
 from fastapi.responses import JSONResponse
 from schemas.gpt_schemas import *
+from config.gpt_config import chat_gpt
+from config.prompt import getQuestion_prompt, getAnswer_prompt, getFeedback_prompt
+from datetime import datetime
 
 router = APIRouter()
 
@@ -22,15 +25,13 @@ def get_question(data : RecommendQuestion):
     
     #gpt한테, 질문 3개 불러오는 api
     
-    questions = [
-        '1번 질문입니다.',
-        '2번 질문입니다.',
-        '3번 질문입니다.'
-    ]
-    
-    return JSONResponse({
-        'questions' : questions
-    })
+    prompt = {
+        "role" : "user",
+        "content" : f"소설 '{book_name}'에서 대립하는 '{sys_target}'와 '{user_target}' 두 인물이 '{topic}'의 주제를 토대로 가상 토론을 하려해. 토론을 나눌만한 3가지 질문을 추천해줘."
+    }
+    getQuestion_prompt.append(prompt)
+    data = chat_gpt(getQuestion_prompt)
+    return data
 
 #책
 #토론 대상
@@ -41,7 +42,7 @@ def get_question(data : RecommendQuestion):
 <h1>n번 질문에 대한 답변 받아오는 API (2개 한번에 받아옴.) </h1>
              """, status_code = 201)
 def get_answer(data : RecommendAnswer):
-    
+    start = datetime.now()
     book_name = data.book_name
     sys_target = data.sys
     user_target = data.user
@@ -50,20 +51,21 @@ def get_answer(data : RecommendAnswer):
     
     #gpt한테 질문에 대한 답변 요구하기 (2개)
     # 받아오는 2개의 유형은 소통해서 정하기
-    answers = {
-        'answer1':{
-            'answer' : '1번 답변',
-            'reason' : '1번 근거',
-            'role' : '주장한 타겟'
-        },
-        'answer2':{
-            'answer' : '2번 답변',
-            'reason' : '2번 근거',
-            'role' : '주장한 타겟'
-        } 
+    prompt = {
+        "role" : "user",
+        "content" : f"소설 '{book_name}'에서 대립하는 '{sys_target}'와 '{user_target}' 두 인물이 토론을 하고있어. '{question}'라는 {sys_target}의 질문에 {user_target} 입장에서 대답할 수 있는 답변1개, {sys_target} 입장에서 대답할 수 있는 답변 1개를 각각 알려줘."
+        # 'content' : f"In the novel '{book_name}' provide one answer each from the perspectives of '{sys_target}' and '{user_target}' to {sys_target}'s question, '{question}'"
     }
+    getAnswer_prompt.append(prompt)
+    data = chat_gpt(getAnswer_prompt)
 
-    return answers
+    print(datetime.now() - start)
+    return data
+
+# body 한글
+# 한글 -> 영어 (3.5)
+# 영어로 gpt4를 타고
+# 영어 -> 한글
 
 #책
 #토론 대상
@@ -85,6 +87,15 @@ def get_feedback(data : RecommendFeedback):
     self = data.self
     #gpt에게 해당 상황말하면서, 피드백 요구하기
     
+    prompt = {
+        "role" : "user",
+        "content" : f"소설 '{book_name}'를 주제로 '{sys_target}'와 '{user_target}'  가상의 독서토론을 나누고 있어. '{question}'라는 {sys_target}의 질문에 '{answer}'라고 {user_target}가 답변을 했어. {user_target}의 답변에대한 {sys_target}의 피드백을 부탁해"
+        }
+    
+    getFeedback_prompt.append(prompt)
+    data = chat_gpt(getFeedback_prompt)
+
+    
     feedback = '제 생각은 ~~~~~~해서, ~~~~~~ 의견입니당!'
     
     sub_feedback = ''
@@ -94,6 +105,6 @@ def get_feedback(data : RecommendFeedback):
     
     
     return JSONResponse({
-        'feedback' : feedback,
+        'feedback' : data,
         'sub_feedback' : sub_feedback
     })
